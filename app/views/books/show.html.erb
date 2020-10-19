@@ -40,13 +40,46 @@
 					  </td>
 					<% end %>
 					<!--いいね機能ここまで-->
+					<!--コメント機能-->
+					<td>
+						<p>コメント数: <%= @book.post_comments.count %></p>
+					</td>
+					<!--コメント機能ここまで-->
 					<% if @book.user == current_user %>
 					  <td><%= link_to "Edit", edit_book_path(@book), class: "btn-sm btn-success edit_book_#{@book.id}" %></td>
 					  <td><%= link_to "Destroy", book_path(@book), method: :delete, data: {confirm: "本当に削除してもよろしいですか？"}, class: "btn-sm btn-danger destroy_book_#{@book.id}" %></td>
-				  <% end %>
+				    <% end %>
 				</tr>
-			</table>
-
+		</table>
+	    <table>
+		  <% @book.post_comments.each do |post_comment| %>
+		    <tr>
+		      <td>
+		      	<%= attachment_image_tag post_comment.user, :profile_image, :fill, 34, 34, fallback: "no-image-mini.jpg" %><br>
+		      	<%= link_to user_path(post_comment.user) do %>
+		      	  <%= post_comment.user.name %>
+		      	<% end %>
+		      </td>
+		      <td>
+		      	<%= post_comment.comment %>
+		      </td>
+		      <td>
+		      	<% if post_comment.user == current_user %>
+		      	  <%= link_to"destroy", book_post_comment_path(post_comment.book, post_comment), method: :delete, class:"btn-sm btn-danger" %>
+		      	<% end %>
+		      </td>
+		    </tr>
+		  <% end %>
+		</table>
+		<br>
+		<%= form_with(model:[@book,@post_comment], local: true) do |f| %>
+		  <div class="row">
+		  	<div class="col-sm-12">
+		  		<%= f.text_area :comment, rows:'5', class: "form-control" %>
+		  	</div>
+		  </div>
+		  <%= f.submit "送信", class:"pull-right" %>
+		<% end %>
 	</div>
 </div>
 
