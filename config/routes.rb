@@ -7,5 +7,9 @@ Rails.application.routes.draw do
     resources :post_comments, only: [:create, :destroy]
   end
 
+  post 'folow/:id' => 'relationships#create', as: 'follow'
+  post 'unfollow/:id' => 'relationships#destroy', as: 'unfollow'
+  get 'follows/:id' => 'relationships#follows', as: 'follows'
+  get 'followers/:id' => 'relationships#followers', as: 'followers'
   resources :users, only: [:show,:index,:edit,:update]
 end
